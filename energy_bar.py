@@ -10,7 +10,7 @@ TEXT_COLOR = '#202020'
 label_font_size = 10
 hatches = ['', "/", "xx", ""]
 
-colors = ["cadetblue", "burlywood", "indianred", "white"]
+colors = ["cadetblue", "burlywood", "lightgreen", "plum", "indianred"]
 
 def config_style():
     mpl.rcParams.update({'font.size': 10})
@@ -70,69 +70,18 @@ def is_float(element) -> bool:
     except ValueError:
         return False
 
+fig, ax = plt.subplots()
+data_path = "data/energy_data.txt"
 
-fig, axs = plt.subplots(2, 1)
-data_path = "data/aws_ate_poster.txt"
-data_path_2 = "data/aws_are_poster.txt"
-
-fig.set_size_inches(6, 4)
-
-line_num = 1
+fig.set_size_inches(2, 4)
 
 x_labels = []
-labels = []
-
 data = []
+width = 0.2       # the width of the bars: can also be len(x) sequence
 
 textfile = open(data_path, "r")
-
-for line in textfile:
-    if (line_num == 1):
-        headers = line.strip('\n').split('\t')
-        x_labels = headers[1:]
-    else:  
-        entries = line.strip().split("\t")
-        labels.append(entries[0])
-        data_point = [float(i) for i in entries[1:]]
-        data.append(data_point)
-    line_num += 1
-            
-x = np.arange(len(x_labels))  # the label locations
-w = 0.15  # the width of the bars
-n = len(labels)
-
-# Creating plot
-axs[0].set_xticks(range(len(x_labels)))
-axs[0].set_xticklabels(x_labels)
-
-for i in range(0, len(data)):
-    position = x + (w*(1-n)/2) + i*w
-    if (i == len(data) - 1):
-        result = axs[0].bar(position, data[i], w, color=colors[i], edgecolor="black", hatch=hatches[i])
-    else:
-        result = axs[0].bar(position, data[i], w, label=labels[i], color=colors[i], edgecolor="black", hatch=hatches[i])
-
-axs[0].set_ylim([0, 10])
-axs[0].set(ylabel='Mean ATE (cm)')
-axs[0].yaxis.set_label_coords(-.08, .5)
-
-axs[0].xaxis.label.set_size(label_font_size)
-axs[0].yaxis.label.set_size(label_font_size)
-axs[0].legend(prop={'size': label_font_size}, ncol=3)
-
-
-axs[0].grid(axis='y')
-
-
-
-
-textfile = open(data_path_2, "r")
 line_num = 1
-
-x_labels = []
-labels = []
-
-data = []
+components = []
 
 for line in textfile:
     if (line_num == 1):
@@ -140,40 +89,25 @@ for line in textfile:
         x_labels = headers[1:]
     else:  
         entries = line.strip().split("\t")
-        labels.append(entries[0])
+        components.append(entries[0])
         data_point = [float(i) for i in entries[1:]]
         data.append(data_point)
     line_num += 1
 
 
-x = np.arange(len(x_labels))  # the label locations
-n = len(labels)
+assert(len(components) == len(data))
 
-# Creating plot
-axs[1].set_xticks(range(len(x_labels)))
-axs[1].set_xticklabels(x_labels)
+bottom_data = [0] * len(x_labels)
 
-for i in range(0, len(data)):
-    position = x + (w*(1-n)/2) + i*w
-    if (i == len(data) - 1):
-        result = axs[1].bar(position, data[i], w, label=labels[i], color=colors[i], edgecolor="black", hatch=hatches[i])
-    else:
-        result = axs[1].bar(position, data[i], w, color=colors[i], edgecolor="black", hatch=hatches[i])
-    # ax.bar_label(result, padding=0)
-
-axs[1].set_ylim([0, 8])
-axs[1].set(ylabel='Mean ATE (deg)')
-axs[1].legend(prop={'size': label_font_size})
-axs[1].yaxis.set_label_coords(-.08, .5)
-
-axs[1].xaxis.label.set_size(label_font_size)
-axs[1].yaxis.label.set_size(label_font_size)
+for i in range(0, len(components)):
+       ax.bar(x_labels, data[i], width, label=components[i], bottom=bottom_data, color=colors[i], edgecolor="black")
+       for j in range(0, len(data[i])):
+              bottom_data[j] += data[i][j]
 
 
-axs[1].grid(axis='y')
+ax.set_ylabel('Energy (W)')
+ax.legend()
 
-plt.savefig('aws_ape.pdf', bbox_inches='tight')
+plt.savefig('energy.pdf', bbox_inches='tight')
 
-# show plot
 plt.show()
-
