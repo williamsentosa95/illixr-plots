@@ -7,13 +7,13 @@ import matplotlib.font_manager
 BASE_SZ = 14
 TEXT_COLOR = '#202020'
 
-label_font_size = 10
+label_font_size = 12
 hatches = ['', "/", "xx", "o"]
 
-colors = ["cadetblue", "burlywood", "indianred", "white"]
+colors = ["cadetblue", "burlywood", "indianred"]
 
 def config_style():
-    mpl.rcParams.update({'font.size': label_font_size})
+    mpl.rcParams.update({'font.size': 14})
 
 def __config_base_style(base_size=BASE_SZ):
     """Customize plot aesthetics."""
@@ -72,8 +72,8 @@ def is_float(element) -> bool:
 
 
 fig, axs = plt.subplots(2, 1)
-data_path = "data/latency_ate_bar.txt"
-data_path_2 = "data/latency_are_bar.txt"
+data_path = "data/latency_compression_ate_bar.txt"
+data_path_2 = "data/latency_compression_are_bar.txt"
 
 fig.set_size_inches(6, 4)
 
@@ -98,35 +98,35 @@ for line in textfile:
     line_num += 1
             
 x = np.arange(len(x_labels))  # the label locations
-w = 0.18  # the width of the bars
+w = 0.3  # the width of the bars
 n = len(labels)
 
 # Creating plot
 axs[0].set_xticks(range(len(x_labels)))
 axs[0].set_xticklabels(x_labels)
 
+colors = ["white", "white", "white", "white", "white", "white", "black"]
+
 for i in range(0, len(data)):
     position = x + (w*(1-n)/2) + i*w
-    if (i < len(data) - 1):
-        result = axs[0].bar(position, data[i], w, label=labels[i], color=colors[i], edgecolor="black", hatch=hatches[i])
-    else:
-        result = axs[0].bar(position, data[i], w, color=colors[i], edgecolor="black", hatch=hatches[i])
+    result = axs[0].bar(position, data[i], w, label="Tracking failed", color="black", edgecolor="black")
+    result = axs[0].bar(position, data[i], w, color=colors, edgecolor="black")
     # ax.bar_label(result, padding=0)
 
-axs[0].set_ylim([0, 12])
+axs[0].set_ylim([0, 20])
 axs[0].set(ylabel='Mean ATE (cm)')
 axs[0].set(xlabel='Network RTT (ms)')
 axs[0].yaxis.set_label_coords(-.08, .5)
 
-axs[0].xaxis.label.set_size(label_font_size)
-axs[0].yaxis.label.set_size(label_font_size)
-axs[0].legend(prop={'size': label_font_size}, ncol=3)
+# ax.xaxis.label.set_size(label_font_size)
+# ax.yaxis.label.set_size(label_font_size)
+axs[0].legend(prop={'size': label_font_size})
 
 
 axs[0].grid(axis='y')
 
 
-axs[0].text(8.5, -0.5, "__", fontsize=30, color="red")
+
 
 textfile = open(data_path_2, "r")
 line_num = 1
@@ -149,35 +149,31 @@ for line in textfile:
 
 
 x = np.arange(len(x_labels))  # the label locations
+w = 0.3  # the width of the bars
 n = len(labels)
 
 # Creating plot
 axs[1].set_xticks(range(len(x_labels)))
 axs[1].set_xticklabels(x_labels)
 
+colors = ["white", "white", "white", "white", "white", "white", "black"]
+
 for i in range(0, len(data)):
     position = x + (w*(1-n)/2) + i*w
-    if (i == len(data) - 1):
-        result = axs[1].bar(position, data[i], w, label=labels[i], color=colors[i], edgecolor="black", hatch=hatches[i])
-    else:
-        result = axs[1].bar(position, data[i], w, color=colors[i], edgecolor="black", hatch=hatches[i])
+    result = axs[1].bar(position, data[i], w, color=colors, edgecolor="black")
     # ax.bar_label(result, padding=0)
 
-# ax.set_ylim([0, 2])
-axs[1].set(ylabel='Mean ATE (degree)')
+axs[1].set_ylim([0, 2])
+axs[1].set(ylabel='Mean ARE (deg)')
 axs[1].set(xlabel='Network RTT (ms)')
 axs[1].yaxis.set_label_coords(-.08, .5)
 
-axs[1].xaxis.label.set_size(label_font_size)
-axs[1].yaxis.label.set_size(label_font_size)
-axs[1].legend(prop={'size': label_font_size})
-
+# ax.xaxis.label.set_size(label_font_size)
+# ax.yaxis.label.set_size(label_font_size)
 
 axs[1].grid(axis='y')
 
-axs[1].text(8.5, -0.5, "__", fontsize=30, color="red")
-
-plt.savefig('latency_ape_bar.pdf', bbox_inches='tight')
+plt.savefig('latency_compression_ape_bar.pdf', bbox_inches='tight')
 
 # show plot
 plt.show()
