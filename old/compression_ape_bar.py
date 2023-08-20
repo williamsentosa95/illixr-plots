@@ -108,9 +108,9 @@ axs[0].set_xticklabels(x_labels)
 for i in range(0, len(data)):
     position = x + (w*(1-n)/2) + i*w
     if (i == len(data) - 1):
-        result = axs[0].bar(position, data[i], w, color=colors[i], edgecolor="black", hatch=hatches[i])
+        result = axs[0].bar(position, data[i], w, color=colors[i], edgecolor="black", label=labels[i], zorder=3)
     else:
-        result = axs[0].bar(position, data[i], w, label=labels[i], color=colors[i], edgecolor="black", hatch=hatches[i])
+        result = axs[0].bar(position, data[i], w, label=labels[i], color=colors[i], edgecolor="black", zorder=3)
 
 # ax.set_ylim([0, 2])
 axs[0].set(ylabel='Mean ATE (cm)')
@@ -157,22 +157,22 @@ axs[1].set_xticklabels(x_labels)
 for i in range(0, len(data)):
     position = x + (w*(1-n)/2) + i*w
     if (i == len(data) - 1):
-        result = axs[1].bar(position, data[i], w, label=labels[i], color=colors[i], edgecolor="black", hatch=hatches[i])
+        result = axs[1].bar(position, data[i], w, color=colors[i], edgecolor="black", zorder=3)
     else:
-        result = axs[1].bar(position, data[i], w, color=colors[i], edgecolor="black", hatch=hatches[i])
+        result = axs[1].bar(position, data[i], w, color=colors[i], edgecolor="black", zorder=3)
     # ax.bar_label(result, padding=0)
 
 axs[1].set_ylim([0, 8])
 axs[1].set(ylabel='Mean ATE (degree)')
 axs[1].set(xlabel='Compression ratio')
-axs[1].legend(prop={'size': label_font_size})
+# axs[1].legend(prop={'size': label_font_size})
 axs[1].yaxis.set_label_coords(-.08, .5)
 
 axs[1].xaxis.label.set_size(label_font_size)
 axs[1].yaxis.label.set_size(label_font_size)
 
 
-axs[1].grid(axis='y')
+axs[1].grid(axis='y', zorder=1)
 
 plt.savefig('compression_ape_bar.pdf', bbox_inches='tight')
 
