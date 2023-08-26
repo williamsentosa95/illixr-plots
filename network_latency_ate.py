@@ -71,8 +71,8 @@ def is_float(element) -> bool:
 
 
 fig, axs = plt.subplots(2, 1)
-data_path_1 = "data/latency_ate_cm.csv"
-data_path_2 = "data/latency_ate_degree.csv"
+data_path_1 = "data_mobicom/latency_ate_cm.csv"
+data_path_2 = "data_mobicom/latency_ate_degree.csv"
 
 fig.set_size_inches(6, 5)
 
@@ -87,9 +87,9 @@ textfile = open(data_path_1, "r")
 
 for line in textfile:
     if (line_num == 1): # process the header
-        headers = line.strip('\n').split(',')
+        headers = line.strip('\n').split('\t')
     else:
-        entries = [float(i) for i in line.strip('\n').split(',')]  
+        entries = [float(i) for i in line.strip('\n').split('\t')]  
         if (len(datapoints) == 0):
             for i in range(0, len(entries)):
                 datapoints.append([])
@@ -107,9 +107,9 @@ textfile = open(data_path_2, "r")
 
 for line in textfile:
     if (line_num == 1): # process the header
-        headers2 = line.strip('\n').split(',')
+        headers2 = line.strip('\n').split('\t')
     else:
-        entries = [float(i) for i in line.strip('\n').split(',')]  
+        entries = [float(i) for i in line.strip('\n').split('\t')]  
         if (len(datapoints2) == 0):
             for i in range(0, len(entries)):
                 datapoints2.append([])
@@ -120,26 +120,38 @@ for line in textfile:
 ########## Creating plot #############
 
 for i in range(1, len(datapoints)):
-    axs[0].plot(datapoints[0], datapoints[i], label=headers[i], marker='o', markersize=5)
+    marker = "o"
+    linestyle = "solid"
+    if ("V" not in headers[i]):
+        marker = "x"
+        linestyle = "dashdot"
+    axs[0].plot(datapoints[0], datapoints[i], label=headers[i], marker=marker, linestyle=linestyle, markersize=3)
 
-axs[0].set_ylim([0, 18])
+axs[0].set_ylim([0, 30])
 # axs[0].set(xlabel='Network round-trip-time (ms)')
 axs[0].set(ylabel='ATE (cm)')
 axs[0].yaxis.label.set_size(axis_label_font_size)
-axs[0].legend(prop={'size': label_font_size}, loc='lower right', ncol=3)
+axs[0].legend(prop={'size': label_font_size}, loc='upper left', ncol=3)
 axs[0].grid()
+axs[0].set_xlim([np.min(datapoints[0]), np.max(datapoints[0])])
 
 for i in range(1, len(datapoints2)):
-    axs[1].plot(datapoints2[0], datapoints2[i], label=headers2[i], marker='o', markersize=5)
+    marker = "o"
+    linestyle = "solid"
+    if ("V" not in headers[i]):
+        marker = "x"
+        linestyle = "dashdot"
+    axs[1].plot(datapoints2[0], datapoints2[i], label=headers2[i], marker=marker, linestyle=linestyle, markersize=3)
 
 # axs[1].set_ylim([0, 15])
 axs[1].set(xlabel='Network round-trip-time (ms)')
 axs[1].set(ylabel='ATE (degree)')
 axs[1].yaxis.label.set_size(axis_label_font_size)
 # axs[1].legend(prop={'size': label_font_size})
-axs[1].set_ylim([0, 6])
+axs[1].set_ylim([0, 8])
 # axs[1].legend(prop={'size': label_font_size}, loc='lower right', ncol=3)
 axs[1].grid()
+axs[1].set_xlim([np.min(datapoints[0]), np.max(datapoints[0])])
 # ax.set_axisbelow(True)
 
 plt.savefig('latency_ate.pdf', bbox_inches='tight')

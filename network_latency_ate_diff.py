@@ -74,7 +74,7 @@ fig, axs = plt.subplots(2, 1)
 data_path_1 = "data_mobicom/latency_ate_cm_diff.csv"
 data_path_2 = "data_mobicom/latency_ate_degree_diff.csv"
 
-fig.set_size_inches(8, 8)
+fig.set_size_inches(6, 5)
 
 
 ####### Process data_path_1 ##########
@@ -120,17 +120,28 @@ for line in textfile:
 ########## Creating plot #############
 
 for i in range(1, len(datapoints)):
-    axs[0].plot(datapoints[0], datapoints[i], label=headers[i], marker='o', markersize=5)
+    marker = "o"
+    linestyle = "solid"
+    if ("V" not in headers[i]):
+        marker = "x"
+        linestyle = "dashdot"
+    axs[0].plot(datapoints[0], datapoints[i], label=headers[i], linestyle=linestyle, marker=marker, markersize=3)
 
 axs[0].set_ylim([0, 10])
 # axs[0].set(xlabel='Network round-trip-time (ms)')
 axs[0].set(ylabel='ATE (cm)')
 axs[0].yaxis.label.set_size(axis_label_font_size)
-axs[0].legend(prop={'size': label_font_size}, loc='lower right', ncol=3)
+axs[0].legend(prop={'size': label_font_size}, loc='upper left', ncol=3)
 axs[0].grid()
+axs[0].set_xlim([np.min(datapoints[0]), np.max(datapoints[0])])
 
 for i in range(1, len(datapoints2)):
-    axs[1].plot(datapoints2[0], datapoints2[i], label=headers2[i], marker='o', markersize=5)
+    marker = "o"
+    linestyle = "solid"
+    if ("V" not in headers[i]):
+        marker = "x"
+        linestyle = "dashdot"
+    axs[1].plot(datapoints2[0], datapoints2[i], label=headers2[i], linestyle=linestyle, marker=marker, markersize=3)
 
 # axs[1].set_ylim([0, 15])
 axs[1].set(xlabel='Network round-trip-time (ms)')
@@ -140,6 +151,7 @@ axs[1].yaxis.label.set_size(axis_label_font_size)
 axs[1].set_ylim([0, 3])
 # axs[1].legend(prop={'size': label_font_size}, loc='lower right', ncol=3)
 axs[1].grid()
+axs[1].set_xlim([np.min(datapoints[0]), np.max(datapoints[0])])
 # ax.set_axisbelow(True)
 
 plt.savefig('latency_ate_diff.pdf', bbox_inches='tight')

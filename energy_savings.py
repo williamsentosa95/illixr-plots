@@ -119,11 +119,11 @@ assert(len(components2) == len(data2))
 bottom_data = [0] * len(x_labels)
 
 n = 2            
-x = np.arange(len(x_labels))  # the label locations
+x = np.arange(len(x_labels)) # the label locations
 width = 0.3  # the width of the bars
 
-ax.bar(x - width / 2, [0,0,0], width, color="white", label="w/o offl.", edgecolor="black")
-ax.bar(x - width / 2, [0,0,0], width, color="white", hatch="///" ,label="w/ offl.", edgecolor="black")
+ax.bar(x - width / 2, [0] * len(x_labels), width, color="white", label="w/o offl.", edgecolor="black")
+ax.bar(x - width / 2, [0] * len(x_labels), width, color="white", hatch="///" ,label="w/ offl.", edgecolor="black")
 
 for i in range(0, len(components)):
     result = ax.bar(x - width / 2, data[i], width, label=components[i], bottom=bottom_data, color=colors[i], edgecolor="black", zorder=3)
@@ -144,14 +144,19 @@ for i in range(0, len(components2)):
         for k in range(0, len(bottom_data)):
             reduction = ((bottom_data[k] - bottom_data2[k]) / bottom_data[k]) * 100
             power_reduction.append(str(round(reduction, 1)) + "%")
-        ax.bar_label(result, labels=power_reduction, padding=3, color="b", weight='bold')
+        ax.bar_label(result, labels=power_reduction, padding=3, color="b", weight='bold', rotation=90)
 
-
+# Hack to fit in another row in the xlabels
+labels = ["V1_03", "V2_02", "V2_03"]
+start = 0.25
+for i in range(0, len(labels)):
+    ax.text(start, -2.2, labels[i])
+    start = start + 2
 
 
 ax.set_xticks(range(len(x_labels)))
 ax.set_xticklabels(x_labels)
-ax.set_ylim([0, 20])
+ax.set_ylim([0, 22])
 ax.legend(loc='upper right', ncol=4)
 ax.grid(zorder=0, axis='y')
 
